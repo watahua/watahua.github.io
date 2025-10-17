@@ -201,7 +201,7 @@
                             <div class="dot absolute left-1 top-1 bg-white dark:bg-indigo-400 w-6 h-6 rounded-full transition-transform"></div>
                         </div>
                     </label>
-                    <span class="hidden sm:block font-medium">Bienvenido, Williams Atahua</span>
+                    <span class="hidden sm:block font-medium">Bienvenido Mishell Flores</span>
                     <button id="logout-btn" class="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-lg text-sm btn-3d btn-red">
                         Salir
                     </button>
@@ -216,11 +216,9 @@
                     <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
                         <h2 class="text-xl font-semibold mb-4">Filtrar por Nivel</h2>
                         <div class="grid grid-cols-3 gap-4">
-                            <button id="filter-distrital" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">Distrital</button>
+                            <button id="filter-distrital" class="filter-btn active w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">Distrital</button>
                             <button id="filter-provincial" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">Provincial</button>
-                            <button id="filter-regional" class="filter-btn active w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">Regional</button>
-                            
-                            
+                            <button id="filter-regional" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">Regional</button>
                         </div>
                     </div>
                 </section>
@@ -337,43 +335,46 @@
             const cameraFeed = document.getElementById('camera-feed');
             let videoStream = null;
 
+            // --- ESTADO DE LA APLICACIÓN ---
+            let currentFilterLevel = 'distrital'; // Estado para el filtro actual, inicia en distrital
+
             // --- BASE DE DATOS SIMULADA ---
             const authoritiesData = {
                 distrital: [
-                    { id: 'dis-may', name: 'Carlos Canales Anchorena', position: 'Alcalde Distrital', currentVotes: 33738, requiredVotes: 134956, isVoted: false, imgInitial: 'CC' },
-                    { id: 'dis-r1', name: 'Alexander Von Ehren Campos', position: 'Regidor Distrital', currentVotes: 31000, requiredVotes: 134956, isVoted: false, imgInitial: 'AV' },
-                    { id: 'dis-r2', name: 'Ana María Lavado Landeo', position: 'Regidora Distrital', currentVotes: 15000, requiredVotes: 134956, isVoted: false, imgInitial: 'AL' },
-                    { id: 'dis-r3', name: 'Francisco Xavier Barrón de Olarte', position: 'Regidor Distrital', currentVotes: 73000, requiredVotes: 134956, isVoted: false, imgInitial: 'FB' },
-                    { id: 'dis-r4', name: 'Betzabe Noriega Sarria de Chu', position: 'Regidora Distrital', currentVotes: 19000, requiredVotes: 134956, isVoted: false, imgInitial: 'BN' },
-                    { id: 'dis-r5', name: 'Paolo Mesia Macher', position: 'Regidor Distrital', currentVotes: 1100, requiredVotes: 134956, isVoted: false, imgInitial: 'PM' },
-                    { id: 'dis-r6', name: 'Denisse Mac Cubbin Bernaola', position: 'Regidora Distrital', currentVotes: 21000, requiredVotes: 134956, isVoted: false, imgInitial: 'DM' },
-                    { id: 'dis-r7', name: 'Nancy Edith Perez Gonzales', position: 'Regidora Distrital', currentVotes: 9500, requiredVotes: 134956, isVoted: false, imgInitial: 'NP' },
-                    { id: 'dis-r8', name: 'Gustavo Alva Oliva', position: 'Regidor Distrital', currentVotes: 14500, requiredVotes: 134956, isVoted: false, imgInitial: 'GA' },
-                    { id: 'dis-r9', name: 'Max Daniel Crespo Loayza', position: 'Regidor Distrital', currentVotes: 16000, requiredVotes: 134956, isVoted: false, imgInitial: 'MC' },
-                    { id: 'dis-r10', name: 'Renato Otiniano Buquich', position: 'Regidor Distrital', currentVotes: 8000, requiredVotes: 134956, isVoted: false, imgInitial: 'RO' },
-                    { id: 'dis-r11', name: 'José Carlos Rosas Zarich', position: 'Regidor Distrital', currentVotes: 17000, requiredVotes: 134956, isVoted: false, imgInitial: 'JR' },
+                    { id: 'dis-may', name: 'Carlos Canales Anchorena', position: 'Alcalde Distrital', currentVotes: 33738, requiredVotes: 134956, isVoted: false, imgInitial: 'CC', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/08742583.png' },
+                    { id: 'dis-r1', name: 'Alexander Von Ehren Campos', position: 'Regidor Distrital', currentVotes: 31000, requiredVotes: 134956, isVoted: false, imgInitial: 'AV', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/10269519.png' },
+                    { id: 'dis-r2', name: 'Ana María Lavado Landeo', position: 'Regidora Distrital', currentVotes: 15000, requiredVotes: 134956, isVoted: false, imgInitial: 'AL', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/09530277.png' },
+                    { id: 'dis-r3', name: 'Francisco Xavier Barrón de Olarte', position: 'Regidor Distrital', currentVotes: 73000, requiredVotes: 134956, isVoted: false, imgInitial: 'FB', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/40149006.png' },
+                    { id: 'dis-r4', name: 'Betzabe Noriega Sarria de Chu', position: 'Regidora Distrital', currentVotes: 19000, requiredVotes: 134956, isVoted: false, imgInitial: 'BN', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/07804329.png' },
+                    { id: 'dis-r5', name: 'Paolo Mesia Macher', position: 'Regidor Distrital', currentVotes: 1100, requiredVotes: 134956, isVoted: false, imgInitial: 'PM', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/46758075.png' },
+                    { id: 'dis-r6', name: 'Denisse Mac Cubbin Bernaola', position: 'Regidora Distrital', currentVotes: 21000, requiredVotes: 134956, isVoted: false, imgInitial: 'DM', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/43473842.png' },
+                    { id: 'dis-r7', name: 'Nancy Edith Perez Gonzales', position: 'Regidora Distrital', currentVotes: 9500, requiredVotes: 134956, isVoted: false, imgInitial: 'NP', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/71061757.png' },
+                    { id: 'dis-r8', name: 'Gustavo Alva Oliva', position: 'Regidor Distrital', currentVotes: 14500, requiredVotes: 134956, isVoted: false, imgInitial: 'GA', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/41256048.png' },
+                    { id: 'dis-r9', name: 'Max Daniel Crespo Loayza', position: 'Regidor Distrital', currentVotes: 16000, requiredVotes: 134956, isVoted: false, imgInitial: 'MC', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/42445623.png' },
+                    { id: 'dis-r10', name: 'Renato Otiniano Buquich', position: 'Regidor Distrital', currentVotes: 8000, requiredVotes: 134956, isVoted: false, imgInitial: 'RO', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/40129063.png' },
+                    { id: 'dis-r11', name: 'José Carlos Rosas Zarich', position: 'Regidor Distrital', currentVotes: 17000, requiredVotes: 134956, isVoted: false, imgInitial: 'JR', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/06464711.png' },
                 ],
                 provincial: [
-                    { id: 'pro-may', name: 'Rafael López Aliaga', position: 'Alcalde Provincial', currentVotes: 3105000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RL' },
-                    { id: 'pro-r1', name: 'Renzo Andres Reggiardo Barreto', position: 'Regidor Municipal', currentVotes: 1450000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RR' },
-                    { id: 'pro-r2', name: 'Fabiola Maria Morales Castillo', position: 'Regidora Municipal', currentVotes: 1320000, requiredVotes: 7593103, isVoted: false, imgInitial: 'FM' },
-                    { id: 'pro-r3', name: 'Julio Cesar Gago Perez', position: 'Regidor Municipal', currentVotes: 210000, requiredVotes: 7593103, isVoted: false, imgInitial: 'JG' },
-                    { id: 'pro-r4', name: 'Roxana María Rocha Gallegos', position: 'Regidora Municipal', currentVotes: 180000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RR' },
-                    { id: 'pro-r5', name: 'Jose Manuel Tisoc Lindley', position: 'Regidor Municipal', currentVotes: 150000, requiredVotes: 7593103, isVoted: false, imgInitial: 'JT' },
-                    { id: 'pro-r6', name: 'Maria Del Rosario Payet Bedoya', position: 'Regidora Municipal', currentVotes: 1290000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MP' },
-                    { id: 'pro-r7', name: 'Guillermo Valdivieso Mendez', position: 'Regidor Municipal', currentVotes: 110000, requiredVotes: 7593103, isVoted: false, imgInitial: 'GV' },
-                    { id: 'pro-r8', name: 'Maria Jose Marcet Yarrow', position: 'Regidora Municipal', currentVotes: 1230000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MM' },
-                    { id: 'pro-r9', name: 'Efrain Aguilar Pardave', position: 'Regidor Municipal', currentVotes: 900000, requiredVotes: 7593103, isVoted: false, imgInitial: 'EA' },
-                    { id: 'pro-r10', name: 'Isaac Estephano Escobedo Rios', position: 'Regidor Municipal', currentVotes: 114000, requiredVotes: 7593103, isVoted: false, imgInitial: 'IE' },
+                    { id: 'pro-may', name: 'Rafael López Aliaga', position: 'Alcalde Provincial', currentVotes: 3105000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RL', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/07845838.png' },
+                    { id: 'pro-r1', name: 'Renzo Andres Reggiardo Barreto', position: 'Regidor Municipal', currentVotes: 1450000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RR', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/09539056.png' },
+                    { id: 'pro-r2', name: 'Fabiola Maria Morales Castillo', position: 'Regidora Municipal', currentVotes: 1320000, requiredVotes: 7593103, isVoted: false, imgInitial: 'FM', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/02622370.png' },
+                    { id: 'pro-r3', name: 'Julio Cesar Gago Perez', position: 'Regidor Municipal', currentVotes: 210000, requiredVotes: 7593103, isVoted: false, imgInitial: 'JG', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/06605315.png' },
+                    { id: 'pro-r4', name: 'Roxana María Rocha Gallegos', position: 'Regidora Municipal', currentVotes: 180000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RR', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/10275564.png' },
+                    { id: 'pro-r5', name: 'Jose Manuel Tisoc Lindley', position: 'Regidor Municipal', currentVotes: 150000, requiredVotes: 7593103, isVoted: false, imgInitial: 'JT', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/42836090.png' },
+                    { id: 'pro-r6', name: 'Maria Del Rosario Payet Bedoya', position: 'Regidora Municipal', currentVotes: 1290000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MP', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/09387498.png' },
+                    { id: 'pro-r7', name: 'Guillermo Valdivieso Mendez', position: 'Regidor Municipal', currentVotes: 110000, requiredVotes: 7593103, isVoted: false, imgInitial: 'GV', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/08778400.png' },
+                    { id: 'pro-r8', name: 'Maria Jose Marcet Yarrow', position: 'Regidora Municipal', currentVotes: 1230000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MM', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/75154418.png' },
+                    { id: 'pro-r9', name: 'Efrain Aguilar Pardave', position: 'Regidor Municipal', currentVotes: 900000, requiredVotes: 7593103, isVoted: false, imgInitial: 'EA', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/07613223.png' },
+                    { id: 'pro-r10', name: 'Isaac Estephano Escobedo Rios', position: 'Regidor Municipal', currentVotes: 114000, requiredVotes: 7593103, isVoted: false, imgInitial: 'IE', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/76616758.png' },
                 ],
                 regional: [
-                    { id: 'reg-gov', name: 'Rosa Vásquez Cuadrado', position: 'Gobernadora Regional', currentVotes: 289150, requiredVotes: 772470, isVoted: false, imgInitial: 'RV' },
-                    { id: 'reg-c1', name: 'Limsay Andrea Bernal Quinteros', position: 'Consejera Regional', currentVotes: 122000, requiredVotes: 772470, isVoted: false, imgInitial: 'LB' },
-                    { id: 'reg-c2', name: 'Victor Arturo Uribe Torres', position: 'Consejero Regional', currentVotes: 8500, requiredVotes: 772470, isVoted: false, imgInitial: 'VU' },
-                    { id: 'reg-c3', name: 'Blanca Cecilia Vicente Prada', position: 'Consejera Regional', currentVotes: 21000, requiredVotes: 772470, isVoted: false, imgInitial: 'BV' },
-                    { id: 'reg-c4', name: 'Ronald Alberto Soberón Vizcarra', position: 'Consejero Regional', currentVotes: 115000, requiredVotes: 772470, isVoted: false, imgInitial: 'RS' },
-                    { id: 'reg-c5', name: 'Ángel Ugarte Javier', position: 'Consejero Regional', currentVotes: 19800, requiredVotes: 772470, isVoted: false, imgInitial: 'AU' },
-                    { id: 'reg-c6', name: 'Tomás Emiliano Chavarria Hungaro', position: 'Consejero Regional', currentVotes: 113400, requiredVotes: 772470, isVoted: false, imgInitial: 'TC' }
+                    { id: 'reg-gov', name: 'Rosa Vásquez Cuadrado', position: 'Gobernadora Regional', currentVotes: 289150, requiredVotes: 772470, isVoted: false, imgInitial: 'RV', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/08119443.png' },
+                    { id: 'reg-c1', name: 'Limsay Andrea Bernal Quinteros', position: 'Consejera Regional', currentVotes: 122000, requiredVotes: 772470, isVoted: false, imgInitial: 'LB', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/71448858.png' },
+                    { id: 'reg-c2', name: 'Victor Arturo Uribe Torres', position: 'Consejero Regional', currentVotes: 8500, requiredVotes: 772470, isVoted: false, imgInitial: 'VU', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/15738021.png' },
+                    { id: 'reg-c3', name: 'Blanca Cecilia Vicente Prada', position: 'Consejera Regional', currentVotes: 21000, requiredVotes: 772470, isVoted: false, imgInitial: 'BV', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/15357194.png' },
+                    { id: 'reg-c4', name: 'Ronald Alberto Soberón Vizcarra', position: 'Consejero Regional', currentVotes: 115000, requiredVotes: 772470, isVoted: false, imgInitial: 'RS', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/41723659.png' },
+                    { id: 'reg-c5', name: 'Ángel Ugarte Javier', position: 'Consejero Regional', currentVotes: 19800, requiredVotes: 772470, isVoted: false, imgInitial: 'AU', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/15215683.png' },
+                    { id: 'reg-c6', name: 'Tomás Emiliano Chavarria Hungaro', position: 'Consejero Regional', currentVotes: 113400, requiredVotes: 772470, isVoted: false, imgInitial: 'TC', imgUrl:'https://otorongoclub.s3.us-east-2.amazonaws.com/postulacion_imgs/70428923.png' }
                 ]
             };
             
@@ -492,7 +493,7 @@
                 card.className = `authority-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2 ${cardExtraClasses}`;
                 card.innerHTML = `
                     ${tagHtml}
-                    <img class="w-24 h-24 rounded-full object-cover mb-4 border-4 border-indigo-200 dark:border-indigo-700" src="https://placehold.co/100x100/E2E8F0/4A5568?text=${auth.imgInitial}" alt="Foto de ${auth.name}">
+                    <img class="w-24 h-24 rounded-full object-cover mb-4 border-4 border-indigo-200 dark:border-indigo-700" src="${auth.imgUrl}" alt="Foto de ${auth.name}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/E2E8F0/4A5568?text=${auth.imgInitial}';">
                     <h3 class="text-lg font-bold">${auth.name}</h3>
                     <p class="text-gray-500 dark:text-gray-400 text-sm">${auth.position}</p>
                     <div class="w-full my-4">
@@ -530,8 +531,9 @@
                     modalContentUnvote.classList.add('hidden');
                 }
                 confirmationModal.classList.remove('hidden');
-                // Re-render all lists to reflect the change
-                renderAuthorities(document.querySelector('.filter-btn.active').id.split('-')[1]);
+                
+                // Re-render all lists to reflect the change, using the state variable
+                renderAuthorities(currentFilterLevel); 
                 renderRevocables();
                 renderMyVotes();
             }
@@ -555,11 +557,13 @@
             });
             closeModalBtn.addEventListener('click', () => confirmationModal.classList.add('hidden'));
             confirmationModal.addEventListener('click', (e) => { if (e.target === confirmationModal) confirmationModal.classList.add('hidden'); });
+            
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     filterButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-                    renderAuthorities(button.id.split('-')[1]);
+                    currentFilterLevel = button.id.split('-')[1]; // Actualizar estado
+                    renderAuthorities(currentFilterLevel);
                 });
             });
             
@@ -581,7 +585,7 @@
             appContainer.addEventListener('click', handleVote);
 
             // --- INICIALIZACIÓN ---
-            renderAuthorities('distrital');
+            renderAuthorities('distrital'); // Cambiado a distrital
             renderRevocables();
             renderMyVotes();
         });
