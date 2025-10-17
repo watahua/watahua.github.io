@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App de Votación Blockchain</title>
+    <title>VOTUM 360 - App de Votación Blockchain</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       // CONFIGURACIÓN PARA ACTIVAR EL MODO OSCURO MANUALMENTE
@@ -160,7 +160,7 @@
         <!-- Header -->
         <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
             <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">VOTUM 360 - Portal de Revocatoria</h1>
+                <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Portal de Revocatoria</h1>
                 <div class="flex items-center space-x-4">
                      <!-- Interruptor de Tema -->
                     <label for="theme-toggle" class="flex items-center cursor-pointer">
@@ -263,10 +263,10 @@
             // --- BASE DE DATOS SIMULADA ---
             const authoritiesData = {
                 distrital: [
-                    { id: 'dis-may', name: 'Carlos Canales Anchorena', position: 'Alcalde Distrital', currentVotes: 98000, requiredVotes: 134956, isVoted: false, imgInitial: 'CC' },
-                    { id: 'dis-r1', name: 'Alexander Von Ehren Campos', position: 'Regidor Distrital', currentVotes: 18000, requiredVotes: 134956, isVoted: false, imgInitial: 'AV' },
+                    { id: 'dis-may', name: 'Carlos Canales Anchorena', position: 'Alcalde Distrital', currentVotes: 33738, requiredVotes: 134956, isVoted: false, imgInitial: 'CC' },
+                    { id: 'dis-r1', name: 'Alexander Von Ehren Campos', position: 'Regidor Distrital', currentVotes: 31000, requiredVotes: 134956, isVoted: false, imgInitial: 'AV' },
                     { id: 'dis-r2', name: 'Ana María Lavado Landeo', position: 'Regidora Distrital', currentVotes: 15000, requiredVotes: 134956, isVoted: false, imgInitial: 'AL' },
-                    { id: 'dis-r3', name: 'Francisco Xavier Barrón de Olarte', position: 'Regidor Distrital', currentVotes: 13000, requiredVotes: 134956, isVoted: false, imgInitial: 'FB' },
+                    { id: 'dis-r3', name: 'Francisco Xavier Barrón de Olarte', position: 'Regidor Distrital', currentVotes: 73000, requiredVotes: 134956, isVoted: false, imgInitial: 'FB' },
                     { id: 'dis-r4', name: 'Betzabe Noriega Sarria de Chu', position: 'Regidora Distrital', currentVotes: 19000, requiredVotes: 134956, isVoted: false, imgInitial: 'BN' },
                     { id: 'dis-r5', name: 'Paolo Mesia Macher', position: 'Regidor Distrital', currentVotes: 1100, requiredVotes: 134956, isVoted: false, imgInitial: 'PM' },
                     { id: 'dis-r6', name: 'Denisse Mac Cubbin Bernaola', position: 'Regidora Distrital', currentVotes: 21000, requiredVotes: 134956, isVoted: false, imgInitial: 'DM' },
@@ -278,25 +278,25 @@
                 ],
                 provincial: [
                     { id: 'pro-may', name: 'Rafael López Aliaga', position: 'Alcalde Provincial', currentVotes: 3105000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RL' },
-                    { id: 'pro-r1', name: 'Renzo Andres Reggiardo Barreto', position: 'Regidor Municipal', currentVotes: 450000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RR' },
-                    { id: 'pro-r2', name: 'Fabiola Maria Morales Castillo', position: 'Regidora Municipal', currentVotes: 320000, requiredVotes: 7593103, isVoted: false, imgInitial: 'FM' },
+                    { id: 'pro-r1', name: 'Renzo Andres Reggiardo Barreto', position: 'Regidor Municipal', currentVotes: 1450000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RR' },
+                    { id: 'pro-r2', name: 'Fabiola Maria Morales Castillo', position: 'Regidora Municipal', currentVotes: 1320000, requiredVotes: 7593103, isVoted: false, imgInitial: 'FM' },
                     { id: 'pro-r3', name: 'Julio Cesar Gago Perez', position: 'Regidor Municipal', currentVotes: 210000, requiredVotes: 7593103, isVoted: false, imgInitial: 'JG' },
                     { id: 'pro-r4', name: 'Roxana María Rocha Gallegos', position: 'Regidora Municipal', currentVotes: 180000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RR' },
                     { id: 'pro-r5', name: 'Jose Manuel Tisoc Lindley', position: 'Regidor Municipal', currentVotes: 150000, requiredVotes: 7593103, isVoted: false, imgInitial: 'JT' },
-                    { id: 'pro-r6', name: 'Maria Del Rosario Payet Bedoya', position: 'Regidora Municipal', currentVotes: 290000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MP' },
+                    { id: 'pro-r6', name: 'Maria Del Rosario Payet Bedoya', position: 'Regidora Municipal', currentVotes: 1290000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MP' },
                     { id: 'pro-r7', name: 'Guillermo Valdivieso Mendez', position: 'Regidor Municipal', currentVotes: 110000, requiredVotes: 7593103, isVoted: false, imgInitial: 'GV' },
-                    { id: 'pro-r8', name: 'Maria Jose Marcet Yarrow', position: 'Regidora Municipal', currentVotes: 230000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MM' },
+                    { id: 'pro-r8', name: 'Maria Jose Marcet Yarrow', position: 'Regidora Municipal', currentVotes: 1230000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MM' },
                     { id: 'pro-r9', name: 'Efrain Aguilar Pardave', position: 'Regidor Municipal', currentVotes: 900000, requiredVotes: 7593103, isVoted: false, imgInitial: 'EA' },
-                    { id: 'pro-r10', name: 'Isaac Estephano Escobedo Rios', position: 'Regidor Municipal', currentVotes: 14000, requiredVotes: 7593103, isVoted: false, imgInitial: 'IE' },
+                    { id: 'pro-r10', name: 'Isaac Estephano Escobedo Rios', position: 'Regidor Municipal', currentVotes: 114000, requiredVotes: 7593103, isVoted: false, imgInitial: 'IE' },
                 ],
                 regional: [
                     { id: 'reg-gov', name: 'Rosa Vásquez Cuadrado', position: 'Gobernadora Regional', currentVotes: 289150, requiredVotes: 772470, isVoted: false, imgInitial: 'RV' },
-                    { id: 'reg-c1', name: 'Limsay Andrea Bernal Quinteros', position: 'Consejera Regional', currentVotes: 12000, requiredVotes: 772470, isVoted: false, imgInitial: 'LB' },
+                    { id: 'reg-c1', name: 'Limsay Andrea Bernal Quinteros', position: 'Consejera Regional', currentVotes: 122000, requiredVotes: 772470, isVoted: false, imgInitial: 'LB' },
                     { id: 'reg-c2', name: 'Victor Arturo Uribe Torres', position: 'Consejero Regional', currentVotes: 8500, requiredVotes: 772470, isVoted: false, imgInitial: 'VU' },
                     { id: 'reg-c3', name: 'Blanca Cecilia Vicente Prada', position: 'Consejera Regional', currentVotes: 21000, requiredVotes: 772470, isVoted: false, imgInitial: 'BV' },
-                    { id: 'reg-c4', name: 'Ronald Alberto Soberón Vizcarra', position: 'Consejero Regional', currentVotes: 15000, requiredVotes: 772470, isVoted: false, imgInitial: 'RS' },
-                    { id: 'reg-c5', name: 'Ángel Ugarte Javier', position: 'Consejero Regional', currentVotes: 9800, requiredVotes: 772470, isVoted: false, imgInitial: 'AU' },
-                    { id: 'reg-c6', name: 'Tomás Emiliano Chavarria Hungaro', position: 'Consejero Regional', currentVotes: 13400, requiredVotes: 772470, isVoted: false, imgInitial: 'TC' }
+                    { id: 'reg-c4', name: 'Ronald Alberto Soberón Vizcarra', position: 'Consejero Regional', currentVotes: 115000, requiredVotes: 772470, isVoted: false, imgInitial: 'RS' },
+                    { id: 'reg-c5', name: 'Ángel Ugarte Javier', position: 'Consejero Regional', currentVotes: 19800, requiredVotes: 772470, isVoted: false, imgInitial: 'AU' },
+                    { id: 'reg-c6', name: 'Tomás Emiliano Chavarria Hungaro', position: 'Consejero Regional', currentVotes: 113400, requiredVotes: 772470, isVoted: false, imgInitial: 'TC' }
                 ]
             };
             
@@ -344,17 +344,18 @@
                 const authorities = authoritiesData[level];
                 
                 authorities.forEach(auth => {
-                    const percentage = Math.round((auth.currentVotes / auth.requiredVotes) * 100);
+                    const precisePercentage = (auth.currentVotes / auth.requiredVotes) * 100;
+                    const displayPercentage = precisePercentage.toFixed(2);
                     
                     let progressBarColor = 'bg-red-500';
                     let cardExtraClasses = '';
                     let tagHtml = '';
 
-                    if (percentage >= 25) {
+                    if (precisePercentage >= 25) {
                         progressBarColor = 'bg-green-500';
                         cardExtraClasses = 'relative bg-green-50 dark:bg-green-900/30 ring-2 ring-green-500';
                         tagHtml = `<div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">Firmas Logradas</div>`;
-                    } else if (percentage >= 14) {
+                    } else if (precisePercentage >= 14) {
                         progressBarColor = 'bg-orange-500';
                     }
 
@@ -371,9 +372,9 @@
                                 <span class="font-semibold" id="votes-${auth.id}">${auth.currentVotes.toLocaleString()} / ${auth.requiredVotes.toLocaleString()}</span>
                             </div>
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                <div id="progress-${auth.id}" class="${progressBarColor} h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                                <div id="progress-${auth.id}" class="${progressBarColor} h-2.5 rounded-full transition-all duration-500" style="width: ${precisePercentage}%"></div>
                             </div>
-                            <p class="text-xs text-gray-500 mt-1">${percentage}% del umbral alcanzado</p>
+                            <p class="text-xs text-gray-500 mt-1" id="percentage-text-${auth.id}">${displayPercentage}% del umbral alcanzado</p>
                         </div>
                         <button data-id="${auth.id}" data-level="${level}" class="vote-btn mt-auto w-full font-bold py-2 px-4 rounded-lg btn-3d ${auth.isVoted ? 'bg-gray-500 hover:bg-gray-400 btn-gray' : 'bg-red-600 hover:bg-red-500 btn-red'}">
                             ${auth.isVoted ? 'Quitar Voto' : 'Votar para Revocar'}
@@ -408,12 +409,14 @@
             }
 
             function updateCardUI(authority, button) {
-                const percentage = Math.round((authority.currentVotes / authority.requiredVotes) * 100);
+                const precisePercentage = (authority.currentVotes / authority.requiredVotes) * 100;
+                const displayPercentage = precisePercentage.toFixed(2);
                 
                 document.getElementById(`votes-${authority.id}`).textContent = `${authority.currentVotes.toLocaleString()} / ${authority.requiredVotes.toLocaleString()}`;
+                document.getElementById(`percentage-text-${authority.id}`).textContent = `${displayPercentage}% del umbral alcanzado`;
                 
                 const progressBar = document.getElementById(`progress-${authority.id}`);
-                progressBar.style.width = `${percentage}%`;
+                progressBar.style.width = `${precisePercentage}%`;
                 progressBar.classList.remove('bg-red-500', 'bg-orange-500', 'bg-green-500');
 
                 const card = button.closest('.authority-card');
@@ -422,12 +425,12 @@
                 const existingTag = card.querySelector('.absolute');
                 if (existingTag) existingTag.remove();
 
-                if (percentage >= 25) {
+                if (precisePercentage >= 25) {
                     progressBar.classList.add('bg-green-500');
                     card.classList.add('relative', 'bg-green-50', 'dark:bg-green-900/30', 'ring-2', 'ring-green-500');
                     const tagHtml = `<div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">Firmas Logradas</div>`;
                     card.insertAdjacentHTML('afterbegin', tagHtml);
-                } else if (percentage >= 14) {
+                } else if (precisePercentage >= 14) {
                     progressBar.classList.add('bg-orange-500');
                 } else {
                     progressBar.classList.add('bg-red-500');
