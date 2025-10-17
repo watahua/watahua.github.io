@@ -90,6 +90,27 @@
             color: white;
             border-color: #312e81; /* indigo-900 */
         }
+        
+        /* Estilos para cámara facial */
+        #camera-container.active {
+            display: block;
+        }
+        #camera-feed {
+            transform: scaleX(-1); /* Efecto espejo */
+        }
+        .scanning-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #059669; /* emerald-600 */
+            box-shadow: 0 0 10px #059669;
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
@@ -99,7 +120,7 @@
         <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Voto Electrónico Ciudadano</h1>
-                <p class="text-gray-500 dark:text-gray-400 mt-2">Inicia sesión para participar en la revocatoria.</p>
+                <p class="text-gray-500 dark:text-gray-400 mt-2">Acceso seguro y verificado.</p>
             </div>
             <form id="login-form">
                 <div class="mb-4">
@@ -110,7 +131,21 @@
                     <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Clave Digital / PIN</label>
                     <input type="password" id="password" name="password" placeholder="••••••••" class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d btn-indigo">
+
+                <!-- Control Facial -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Verificación Facial</label>
+                    <div id="camera-container" class="hidden relative w-full aspect-video bg-gray-900 rounded-lg overflow-hidden my-2">
+                        <video id="camera-feed" class="w-full h-full object-cover" autoplay playsinline></video>
+                        <div class="scanning-line"></div>
+                    </div>
+                    <button type="button" id="facial-recognition-btn" class="w-full flex items-center justify-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-emerald-300 dark:focus:ring-emerald-800 btn-3d" style="border-color: #047857;">
+                        <span id="facial-recognition-text">Activar Cámara</span>
+                        <svg id="facial-recognition-check" class="w-6 h-6 ml-2 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </button>
+                </div>
+
+                <button type="submit" id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d btn-indigo disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                     Ingresar de forma segura
                 </button>
             </form>
@@ -125,7 +160,7 @@
         <!-- Header -->
         <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
             <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Portal de Revocatoria</h1>
+                <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">VOTUM 360 - Portal de Revocatoria</h1>
                 <div class="flex items-center space-x-4">
                      <!-- Interruptor de Tema -->
                     <label for="theme-toggle" class="flex items-center cursor-pointer">
@@ -135,7 +170,7 @@
                             <div class="dot absolute left-1 top-1 bg-white dark:bg-indigo-400 w-6 h-6 rounded-full transition-transform"></div>
                         </div>
                     </label>
-                    <span class="hidden sm:block font-medium">Bienvenido, Juan Pérez</span>
+                    <span class="hidden sm:block font-medium">Bienvenido, Williams Atahua</span>
                     <button id="logout-btn" class="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-lg text-sm btn-3d btn-red">
                         Salir
                     </button>
@@ -149,8 +184,7 @@
             <section id="filters" class="mb-8">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
                     <h2 class="text-xl font-semibold mb-4">Filtrar por Nivel</h2>
-                    <div class="grid grid-cols-3 gap-4">                        
-                        
+                    <div class="grid grid-cols-3 gap-4">
                         <button id="filter-distrital" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">
                             Distrital
                         </button>
@@ -181,6 +215,10 @@
                 <svg class="w-20 h-20 mx-auto text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <h3 class="text-2xl font-bold mt-4">¡Voto Registrado!</h3>
                 <p class="text-gray-600 dark:text-gray-300 my-2">Tu voto ha sido emitido y registrado de forma segura en la blockchain.</p>
+                <div class="mt-4 text-left">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Hash de transacción:</p>
+                    <p id="transaction-hash" class="text-xs bg-gray-100 dark:bg-gray-700 rounded p-2 font-mono break-all"></p>
+                </div>
             </div>
              <div id="modal-content-unvote" class="hidden">
                 <svg class="w-20 h-20 mx-auto text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -200,6 +238,7 @@
             const loginView = document.getElementById('login-view');
             const dashboardView = document.getElementById('dashboard-view');
             const loginForm = document.getElementById('login-form');
+            const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
             const confirmationModal = document.getElementById('confirmation-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
@@ -210,6 +249,16 @@
             const filterButtons = document.querySelectorAll('.filter-btn');
             const modalContentVote = document.getElementById('modal-content-vote');
             const modalContentUnvote = document.getElementById('modal-content-unvote');
+            const transactionHashEl = document.getElementById('transaction-hash');
+
+            // Elementos de control facial
+            const facialRecognitionBtn = document.getElementById('facial-recognition-btn');
+            const facialRecognitionText = document.getElementById('facial-recognition-text');
+            const facialRecognitionCheck = document.getElementById('facial-recognition-check');
+            const cameraContainer = document.getElementById('camera-container');
+            const cameraFeed = document.getElementById('camera-feed');
+            let videoStream = null;
+
 
             // --- BASE DE DATOS SIMULADA ---
             const authoritiesData = {
@@ -249,10 +298,45 @@
                     { id: 'reg-c5', name: 'Ángel Ugarte Javier', position: 'Consejero Regional', currentVotes: 9800, requiredVotes: 772470, isVoted: false, imgInitial: 'AU' },
                     { id: 'reg-c6', name: 'Tomás Emiliano Chavarria Hungaro', position: 'Consejero Regional', currentVotes: 13400, requiredVotes: 772470, isVoted: false, imgInitial: 'TC' }
                 ]
-                
             };
-
+            
             // --- FUNCIONES ---
+            function generateFakeHash() {
+                return '0x' + [...Array(64)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+            }
+
+            async function startFacialScan() {
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                    videoStream = null;
+                }
+                
+                try {
+                    videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    cameraContainer.classList.remove('hidden');
+                    cameraFeed.srcObject = videoStream;
+                    facialRecognitionText.textContent = "Escaneando...";
+                    facialRecognitionBtn.disabled = true;
+
+                    setTimeout(() => {
+                        // Simulación de validación
+                        videoStream.getTracks().forEach(track => track.stop());
+                        cameraContainer.classList.add('hidden');
+                        facialRecognitionText.textContent = "Rostro Validado";
+                        facialRecognitionCheck.classList.remove('hidden');
+                        loginBtn.disabled = false; // Habilitar botón de login
+                        facialRecognitionBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
+                        facialRecognitionBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                    }, 3000);
+
+                } catch (err) {
+                    console.error("Error al acceder a la cámara: ", err);
+                    facialRecognitionText.textContent = "Acceso a cámara denegado";
+                    facialRecognitionBtn.classList.add('bg-red-500');
+                }
+            }
+
+
             function renderAuthorities(level) {
                 authoritiesListContainer.innerHTML = '';
                 authoritiesTitle.textContent = `Autoridades de Nivel ${level.charAt(0).toUpperCase() + level.slice(1)}`;
@@ -314,6 +398,7 @@
                 } else {
                     authority.currentVotes++;
                     authority.isVoted = true;
+                    transactionHashEl.textContent = generateFakeHash();
                     modalContentVote.classList.remove('hidden');
                     modalContentUnvote.classList.add('hidden');
                 }
@@ -332,7 +417,6 @@
                 progressBar.classList.remove('bg-red-500', 'bg-orange-500', 'bg-green-500');
 
                 const card = button.closest('.authority-card');
-                // Reset card classes before applying new ones
                 card.className = "authority-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2";
                 
                 const existingTag = card.querySelector('.absolute');
@@ -372,6 +456,8 @@
                 localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
             });
 
+            facialRecognitionBtn.addEventListener('click', startFacialScan);
+
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 loginView.classList.add('hidden');
@@ -381,6 +467,14 @@
             logoutBtn.addEventListener('click', () => {
                 dashboardView.classList.add('hidden');
                 loginView.classList.remove('hidden');
+                // Reset login form for next time
+                loginBtn.disabled = true;
+                facialRecognitionBtn.disabled = false;
+                facialRecognitionBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+                facialRecognitionBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                facialRecognitionText.textContent = "Activar Cámara";
+                facialRecognitionCheck.classList.add('hidden');
+
             });
 
             closeModalBtn.addEventListener('click', () => confirmationModal.classList.add('hidden'));
