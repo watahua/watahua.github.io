@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="scroll-smooth dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,18 @@
       // CONFIGURACIÓN PARA ACTIVAR EL MODO OSCURO MANUALMENTE
       tailwind.config = {
         darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    orange: {
+                        500: '#f97316',
+                    },
+                    green: {
+                        500: '#22c55e',
+                    }
+                }
+            }
+        }
       }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,9 +86,9 @@
 
         .filter-btn.active {
             --tw-bg-opacity: 1;
-            background-color: rgb(79 70 229 / var(--tw-bg-opacity));
+            background-color: rgb(79 70 229 / var(--tw-bg-opacity)); /* indigo-600 */
             color: white;
-            border-color: #312e81;
+            border-color: #312e81; /* indigo-900 */
         }
     </style>
 </head>
@@ -92,11 +104,11 @@
             <form id="login-form">
                 <div class="mb-4">
                     <label for="dni" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Documento de Identidad (DNI)</label>
-                    <input type="text" id="dni" name="dni" placeholder="Ej: 12345678" class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition" required>
+                    <input type="text" id="dni" name="dni" placeholder="Ej: 12345678" class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
                 </div>
                 <div class="mb-6">
                     <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Clave Digital / PIN</label>
-                    <input type="password" id="password" name="password" placeholder="••••••••" class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition" required>
+                    <input type="password" id="password" name="password" placeholder="••••••••" class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
                 </div>
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d btn-indigo">
                     Ingresar de forma segura
@@ -137,15 +149,16 @@
             <section id="filters" class="mb-8">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
                     <h2 class="text-xl font-semibold mb-4">Filtrar por Nivel</h2>
-                    <div class="grid grid-cols-3 gap-4">
-                        <button id="filter-regional" class="filter-btn active w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">
-                            Regional
+                    <div class="grid grid-cols-3 gap-4">                        
+                        
+                        <button id="filter-distrital" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">
+                            Distrital
                         </button>
                         <button id="filter-provincial" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">
                             Provincial
                         </button>
-                        <button id="filter-distrital" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">
-                            Distrital
+                        <button id="filter-regional" class="filter-btn active w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">
+                            Regional
                         </button>
                     </div>
                 </div>
@@ -200,18 +213,43 @@
 
             // --- BASE DE DATOS SIMULADA ---
             const authoritiesData = {
-                regional: [
-                    { id: 'reg-gov', name: 'Luis Gonzales', position: 'Gobernador Regional', currentVotes: 149999, requiredVotes: 150000, isVoted: false, imgInitial: 'LG' },
-                    ...Array.from({ length: 7 }, (_, i) => ({ id: `reg-r${i+1}`, name: `Regidor Regional ${i+1}`, position: 'Regidor Regional', currentVotes: Math.floor(Math.random() * 8000), requiredVotes: 10000, isVoted: false, imgInitial: `R${i+1}` }))
+                distrital: [
+                    { id: 'dis-may', name: 'Carlos Canales Anchorena', position: 'Alcalde Distrital', currentVotes: 98000, requiredVotes: 134956, isVoted: false, imgInitial: 'CC' },
+                    { id: 'dis-r1', name: 'Alexander Von Ehren Campos', position: 'Regidor Distrital', currentVotes: 18000, requiredVotes: 134956, isVoted: false, imgInitial: 'AV' },
+                    { id: 'dis-r2', name: 'Ana María Lavado Landeo', position: 'Regidora Distrital', currentVotes: 15000, requiredVotes: 134956, isVoted: false, imgInitial: 'AL' },
+                    { id: 'dis-r3', name: 'Francisco Xavier Barrón de Olarte', position: 'Regidor Distrital', currentVotes: 13000, requiredVotes: 134956, isVoted: false, imgInitial: 'FB' },
+                    { id: 'dis-r4', name: 'Betzabe Noriega Sarria de Chu', position: 'Regidora Distrital', currentVotes: 19000, requiredVotes: 134956, isVoted: false, imgInitial: 'BN' },
+                    { id: 'dis-r5', name: 'Paolo Mesia Macher', position: 'Regidor Distrital', currentVotes: 1100, requiredVotes: 134956, isVoted: false, imgInitial: 'PM' },
+                    { id: 'dis-r6', name: 'Denisse Mac Cubbin Bernaola', position: 'Regidora Distrital', currentVotes: 21000, requiredVotes: 134956, isVoted: false, imgInitial: 'DM' },
+                    { id: 'dis-r7', name: 'Nancy Edith Perez Gonzales', position: 'Regidora Distrital', currentVotes: 9500, requiredVotes: 134956, isVoted: false, imgInitial: 'NP' },
+                    { id: 'dis-r8', name: 'Gustavo Alva Oliva', position: 'Regidor Distrital', currentVotes: 14500, requiredVotes: 134956, isVoted: false, imgInitial: 'GA' },
+                    { id: 'dis-r9', name: 'Max Daniel Crespo Loayza', position: 'Regidor Distrital', currentVotes: 16000, requiredVotes: 134956, isVoted: false, imgInitial: 'MC' },
+                    { id: 'dis-r10', name: 'Renato Otiniano Buquich', position: 'Regidor Distrital', currentVotes: 8000, requiredVotes: 134956, isVoted: false, imgInitial: 'RO' },
+                    { id: 'dis-r11', name: 'José Carlos Rosas Zarich', position: 'Regidor Distrital', currentVotes: 17000, requiredVotes: 134956, isVoted: false, imgInitial: 'JR' },
                 ],
                 provincial: [
-                    { id: 'pro-may', name: 'Maria Flores', position: 'Alcaldesa Provincial', currentVotes: 15300, requiredVotes: 25000, isVoted: false, imgInitial: 'MF' },
-                    ...Array.from({ length: 7 }, (_, i) => ({ id: `pro-r${i+1}`, name: `Regidor Provincial ${i+1}`, position: 'Regidor Provincial', currentVotes: Math.floor(Math.random() * 5000), requiredVotes: 8000, isVoted: false, imgInitial: `R${i+1}` }))
+                    { id: 'pro-may', name: 'Rafael López Aliaga', position: 'Alcalde Provincial', currentVotes: 3105000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RL' },
+                    { id: 'pro-r1', name: 'Renzo Andres Reggiardo Barreto', position: 'Regidor Municipal', currentVotes: 450000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RR' },
+                    { id: 'pro-r2', name: 'Fabiola Maria Morales Castillo', position: 'Regidora Municipal', currentVotes: 320000, requiredVotes: 7593103, isVoted: false, imgInitial: 'FM' },
+                    { id: 'pro-r3', name: 'Julio Cesar Gago Perez', position: 'Regidor Municipal', currentVotes: 210000, requiredVotes: 7593103, isVoted: false, imgInitial: 'JG' },
+                    { id: 'pro-r4', name: 'Roxana María Rocha Gallegos', position: 'Regidora Municipal', currentVotes: 180000, requiredVotes: 7593103, isVoted: false, imgInitial: 'RR' },
+                    { id: 'pro-r5', name: 'Jose Manuel Tisoc Lindley', position: 'Regidor Municipal', currentVotes: 150000, requiredVotes: 7593103, isVoted: false, imgInitial: 'JT' },
+                    { id: 'pro-r6', name: 'Maria Del Rosario Payet Bedoya', position: 'Regidora Municipal', currentVotes: 290000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MP' },
+                    { id: 'pro-r7', name: 'Guillermo Valdivieso Mendez', position: 'Regidor Municipal', currentVotes: 110000, requiredVotes: 7593103, isVoted: false, imgInitial: 'GV' },
+                    { id: 'pro-r8', name: 'Maria Jose Marcet Yarrow', position: 'Regidora Municipal', currentVotes: 230000, requiredVotes: 7593103, isVoted: false, imgInitial: 'MM' },
+                    { id: 'pro-r9', name: 'Efrain Aguilar Pardave', position: 'Regidor Municipal', currentVotes: 900000, requiredVotes: 7593103, isVoted: false, imgInitial: 'EA' },
+                    { id: 'pro-r10', name: 'Isaac Estephano Escobedo Rios', position: 'Regidor Municipal', currentVotes: 14000, requiredVotes: 7593103, isVoted: false, imgInitial: 'IE' },
                 ],
-                distrital: [
-                    { id: 'dis-may', name: 'Ana Paredes', position: 'Alcaldesa Distrital', currentVotes: 2450, requiredVotes: 5000, isVoted: false, imgInitial: 'AP' },
-                    ...Array.from({ length: 7 }, (_, i) => ({ id: `dis-r${i+1}`, name: `Regidor Distrital ${i+1}`, position: 'Regidor Distrital', currentVotes: Math.floor(Math.random() * 2000), requiredVotes: 2500, isVoted: false, imgInitial: `R${i+1}` }))
+                regional: [
+                    { id: 'reg-gov', name: 'Rosa Vásquez Cuadrado', position: 'Gobernadora Regional', currentVotes: 289150, requiredVotes: 772470, isVoted: false, imgInitial: 'RV' },
+                    { id: 'reg-c1', name: 'Limsay Andrea Bernal Quinteros', position: 'Consejera Regional', currentVotes: 12000, requiredVotes: 772470, isVoted: false, imgInitial: 'LB' },
+                    { id: 'reg-c2', name: 'Victor Arturo Uribe Torres', position: 'Consejero Regional', currentVotes: 8500, requiredVotes: 772470, isVoted: false, imgInitial: 'VU' },
+                    { id: 'reg-c3', name: 'Blanca Cecilia Vicente Prada', position: 'Consejera Regional', currentVotes: 21000, requiredVotes: 772470, isVoted: false, imgInitial: 'BV' },
+                    { id: 'reg-c4', name: 'Ronald Alberto Soberón Vizcarra', position: 'Consejero Regional', currentVotes: 15000, requiredVotes: 772470, isVoted: false, imgInitial: 'RS' },
+                    { id: 'reg-c5', name: 'Ángel Ugarte Javier', position: 'Consejero Regional', currentVotes: 9800, requiredVotes: 772470, isVoted: false, imgInitial: 'AU' },
+                    { id: 'reg-c6', name: 'Tomás Emiliano Chavarria Hungaro', position: 'Consejero Regional', currentVotes: 13400, requiredVotes: 772470, isVoted: false, imgInitial: 'TC' }
                 ]
+                
             };
 
             // --- FUNCIONES ---
@@ -223,9 +261,23 @@
                 
                 authorities.forEach(auth => {
                     const percentage = Math.round((auth.currentVotes / auth.requiredVotes) * 100);
+                    
+                    let progressBarColor = 'bg-red-500';
+                    let cardExtraClasses = '';
+                    let tagHtml = '';
+
+                    if (percentage >= 25) {
+                        progressBarColor = 'bg-green-500';
+                        cardExtraClasses = 'relative bg-green-50 dark:bg-green-900/30 ring-2 ring-green-500';
+                        tagHtml = `<div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">Firmas Logradas</div>`;
+                    } else if (percentage >= 14) {
+                        progressBarColor = 'bg-orange-500';
+                    }
+
                     const card = document.createElement('div');
-                    card.className = "bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2";
+                    card.className = `authority-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2 ${cardExtraClasses}`;
                     card.innerHTML = `
+                        ${tagHtml}
                         <img class="w-24 h-24 rounded-full object-cover mb-4 border-4 border-indigo-200 dark:border-indigo-700" src="https://placehold.co/100x100/E2E8F0/4A5568?text=${auth.imgInitial}" alt="Foto de ${auth.name}">
                         <h3 class="text-lg font-bold">${auth.name}</h3>
                         <p class="text-gray-500 dark:text-gray-400 text-sm">${auth.position}</p>
@@ -235,7 +287,7 @@
                                 <span class="font-semibold" id="votes-${auth.id}">${auth.currentVotes.toLocaleString()} / ${auth.requiredVotes.toLocaleString()}</span>
                             </div>
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                <div id="progress-${auth.id}" class="bg-red-500 h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                                <div id="progress-${auth.id}" class="${progressBarColor} h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
                             </div>
                             <p class="text-xs text-gray-500 mt-1">${percentage}% del umbral alcanzado</p>
                         </div>
@@ -266,7 +318,6 @@
                     modalContentUnvote.classList.add('hidden');
                 }
                 
-                // Actualizar la UI de la tarjeta específica
                 updateCardUI(authority, button);
                 confirmationModal.classList.remove('hidden');
             }
@@ -274,14 +325,30 @@
             function updateCardUI(authority, button) {
                 const percentage = Math.round((authority.currentVotes / authority.requiredVotes) * 100);
                 
-                // Actualizar contador de votos
                 document.getElementById(`votes-${authority.id}`).textContent = `${authority.currentVotes.toLocaleString()} / ${authority.requiredVotes.toLocaleString()}`;
                 
-                // Actualizar barra de progreso
                 const progressBar = document.getElementById(`progress-${authority.id}`);
                 progressBar.style.width = `${percentage}%`;
+                progressBar.classList.remove('bg-red-500', 'bg-orange-500', 'bg-green-500');
+
+                const card = button.closest('.authority-card');
+                // Reset card classes before applying new ones
+                card.className = "authority-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2";
                 
-                // Actualizar texto y estilo del botón
+                const existingTag = card.querySelector('.absolute');
+                if (existingTag) existingTag.remove();
+
+                if (percentage >= 25) {
+                    progressBar.classList.add('bg-green-500');
+                    card.classList.add('relative', 'bg-green-50', 'dark:bg-green-900/30', 'ring-2', 'ring-green-500');
+                    const tagHtml = `<div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">Firmas Logradas</div>`;
+                    card.insertAdjacentHTML('afterbegin', tagHtml);
+                } else if (percentage >= 14) {
+                    progressBar.classList.add('bg-orange-500');
+                } else {
+                    progressBar.classList.add('bg-red-500');
+                }
+                
                 button.textContent = authority.isVoted ? 'Quitar Voto' : 'Votar para Revocar';
                 button.classList.toggle('bg-red-600', !authority.isVoted);
                 button.classList.toggle('hover:bg-red-500', !authority.isVoted);
@@ -292,10 +359,14 @@
             }
 
             // --- EVENT LISTENERS ---
-            if (localStorage.getItem('theme') === 'dark') {
+            if (localStorage.getItem('theme') === 'light') {
+                htmlEl.classList.remove('dark');
+                themeToggle.checked = false;
+            } else {
                 htmlEl.classList.add('dark');
                 themeToggle.checked = true;
             }
+
             themeToggle.addEventListener('change', () => {
                 htmlEl.classList.toggle('dark');
                 localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
@@ -329,7 +400,7 @@
             authoritiesListContainer.addEventListener('click', handleVote);
 
             // --- INICIALIZACIÓN ---
-            renderAuthorities('regional');
+            renderAuthorities('distrital');
         });
     </script>
 
