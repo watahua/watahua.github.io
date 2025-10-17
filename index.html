@@ -111,6 +111,15 @@
             0% { top: 0%; }
             100% { top: 100%; }
         }
+
+        /* Estilos para Menú Flotante (FAB) */
+        #fab-menu {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        #fab-menu.hidden {
+            transform: translateY(20px) scale(0.9);
+            opacity: 0;
+        }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
@@ -131,8 +140,6 @@
                     <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Clave Digital / PIN</label>
                     <input type="password" id="password" name="password" placeholder="••••••••" class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
                 </div>
-
-                <!-- Control Facial -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Verificación Facial</label>
                     <div id="camera-container" class="hidden relative w-full aspect-video bg-gray-900 rounded-lg overflow-hidden my-2">
@@ -144,7 +151,6 @@
                         <svg id="facial-recognition-check" class="w-6 h-6 ml-2 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     </button>
                 </div>
-
                 <button type="submit" id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d btn-indigo disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                     Ingresar de forma segura
                 </button>
@@ -155,14 +161,39 @@
         </div>
     </div>
 
-    <!-- Vista Principal de la App -->
-    <div id="dashboard-view" class="hidden min-h-screen animate-fade-in">
+    <!-- Vista de Bienvenida -->
+    <div id="welcome-view" class="hidden min-h-screen flex items-center justify-center p-4 animate-fade-in">
+        <div class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center">
+            <h1 class="text-4xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">¡Bienvenido al Portal de Revocatoria!</h1>
+            <p class="text-gray-600 dark:text-gray-300 text-lg mb-6">
+                Tu participación es fundamental. Este sistema utiliza tecnología <span class="font-bold text-indigo-500">blockchain</span> para garantizar que cada voto sea seguro, transparente e inalterable.
+            </p>
+            <div class="bg-indigo-50 dark:bg-gray-700 p-4 rounded-lg mb-8">
+                <p class="text-indigo-800 dark:text-indigo-200">
+                    Recuerda: se necesita alcanzar el <span class="font-bold">25%</span> del total de electores para que una autoridad pueda ser revocada. ¡Tu voto cuenta!
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <button id="welcome-vote-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 px-6 rounded-lg text-lg btn-3d btn-indigo">
+                    Votar Ahora
+                </button>
+                <button id="welcome-revocables-btn" class="bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-6 rounded-lg text-lg btn-3d" style="border-color: #15803d;">
+                    Candidatos Revocables
+                </button>
+                <button id="welcome-my-vote-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-4 px-6 rounded-lg text-lg btn-3d btn-gray">
+                    Mis Votos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor Principal de la App (incluye todas las vistas post-login) -->
+    <div id="app-container" class="hidden">
         <!-- Header -->
         <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
             <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Portal de Revocatoria</h1>
+                <h1 id="header-title" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400"></h1>
                 <div class="flex items-center space-x-4">
-                     <!-- Interruptor de Tema -->
                     <label for="theme-toggle" class="flex items-center cursor-pointer">
                         <div class="relative">
                             <input type="checkbox" id="theme-toggle" class="sr-only">
@@ -178,41 +209,62 @@
             </nav>
         </header>
 
-        <!-- Contenido Principal -->
-        <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-            <!-- Filtros -->
-            <section id="filters" class="mb-8">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
-                    <h2 class="text-xl font-semibold mb-4">Filtrar por Nivel</h2>
-                    <div class="grid grid-cols-3 gap-4">
-                        <button id="filter-distrital" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">
-                            Distrital
-                        </button>
-                        <button id="filter-provincial" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">
-                            Provincial
-                        </button>
-                        <button id="filter-regional" class="filter-btn active w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">
-                            Regional
-                        </button>
+        <!-- Vista Principal de Votación -->
+        <div id="dashboard-view" class="view-content hidden min-h-screen animate-fade-in">
+            <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+                <section id="filters" class="mb-8">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+                        <h2 class="text-xl font-semibold mb-4">Filtrar por Nivel</h2>
+                        <div class="grid grid-cols-3 gap-4">
+                            <button id="filter-distrital" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">Distrital</button>
+                            <button id="filter-provincial" class="filter-btn w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">Provincial</button>
+                            <button id="filter-regional" class="filter-btn active w-full bg-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 btn-3d" style="border-color: #ccc;">Regional</button>
+                            
+                            
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+                <section id="authorities-section">
+                    <h2 id="authorities-title" class="text-xl font-semibold mb-4"></h2>
+                    <div id="authorities-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+                </section>
+            </main>
+        </div>
+        
+        <!-- Vista de Candidatos Revocables -->
+        <div id="revocables-view" class="view-content hidden min-h-screen animate-fade-in">
+             <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+                <div id="revocables-list" class="space-y-6"></div>
+             </main>
+        </div>
 
-            <!-- Lista de Autoridades -->
-            <section id="authorities-section">
-                <h2 id="authorities-title" class="text-xl font-semibold mb-4"></h2>
-                <div id="authorities-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Las tarjetas de autoridad se generarán aquí con JavaScript -->
-                </div>
-            </section>
-        </main>
+        <!-- Vista de Mis Votos -->
+        <div id="my-vote-view" class="view-content hidden min-h-screen animate-fade-in">
+             <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+                <div id="my-vote-list" class="space-y-6"></div>
+             </main>
+        </div>
+
+    </div>
+
+    <!-- Menú Flotante (FAB) -->
+    <div id="fab-container" class="hidden fixed bottom-6 right-6 z-40">
+        <div id="fab-menu" class="hidden flex flex-col items-center space-y-3 mb-3">
+            <button id="fab-my-vote" class="w-40 justify-center flex items-center bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-full shadow-lg">Mis Votos</button>
+            <button id="fab-revocables" class="w-40 justify-center flex items-center bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-full shadow-lg">Revocables</button>
+            <button id="fab-vote" class="w-40 justify-center flex items-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-full shadow-lg">Votar Ahora</button>
+        </div>
+        <button id="fab-main-btn" class="w-16 h-16 bg-indigo-700 hover:bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-2xl transition-transform transform hover:scale-110">
+            <svg id="fab-icon-menu" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            <svg id="fab-icon-close" class="w-8 h-8 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
     </div>
 
     <!-- Modal de Confirmación -->
     <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center max-w-sm w-full animate-pop-in">
             <div id="modal-content-vote">
-                <svg class="w-20 h-20 mx-auto text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <svg class="w-20 h-20 mx-auto text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <h3 class="text-2xl font-bold mt-4">¡Voto Registrado!</h3>
                 <p class="text-gray-600 dark:text-gray-300 my-2">Tu voto ha sido emitido y registrado de forma segura en la blockchain.</p>
                 <div class="mt-4 text-left">
@@ -221,13 +273,11 @@
                 </div>
             </div>
              <div id="modal-content-unvote" class="hidden">
-                <svg class="w-20 h-20 mx-auto text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <svg class="w-20 h-20 mx-auto text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <h3 class="text-2xl font-bold mt-4">Voto Retirado</h3>
                 <p class="text-gray-600 dark:text-gray-300 my-2">Has retirado tu voto para esta autoridad.</p>
             </div>
-            <button id="close-modal-btn" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg btn-3d btn-indigo">
-                Entendido
-            </button>
+            <button id="close-modal-btn" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg btn-3d btn-indigo">Entendido</button>
         </div>
     </div>
 
@@ -236,20 +286,48 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- ELEMENTOS DEL DOM ---
             const loginView = document.getElementById('login-view');
+            const welcomeView = document.getElementById('welcome-view');
+            const appContainer = document.getElementById('app-container');
             const dashboardView = document.getElementById('dashboard-view');
+            const revocablesView = document.getElementById('revocables-view');
+            const myVoteView = document.getElementById('my-vote-view');
+            const allViews = document.querySelectorAll('.view-content');
+
             const loginForm = document.getElementById('login-form');
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
+            
+            const headerTitle = document.getElementById('header-title');
+
+            const welcomeVoteBtn = document.getElementById('welcome-vote-btn');
+            const welcomeRevocablesBtn = document.getElementById('welcome-revocables-btn');
+            const welcomeMyVoteBtn = document.getElementById('welcome-my-vote-btn');
+
             const confirmationModal = document.getElementById('confirmation-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
             const themeToggle = document.getElementById('theme-toggle');
             const htmlEl = document.documentElement;
+
             const authoritiesListContainer = document.getElementById('authorities-list');
             const authoritiesTitle = document.getElementById('authorities-title');
             const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            const revocablesListContainer = document.getElementById('revocables-list');
+            const myVoteListContainer = document.getElementById('my-vote-list');
+
             const modalContentVote = document.getElementById('modal-content-vote');
             const modalContentUnvote = document.getElementById('modal-content-unvote');
             const transactionHashEl = document.getElementById('transaction-hash');
+
+            // --- FAB Elements ---
+            const fabContainer = document.getElementById('fab-container');
+            const fabMainBtn = document.getElementById('fab-main-btn');
+            const fabMenu = document.getElementById('fab-menu');
+            const fabIconMenu = document.getElementById('fab-icon-menu');
+            const fabIconClose = document.getElementById('fab-icon-close');
+            const fabVoteBtn = document.getElementById('fab-vote');
+            const fabRevocablesBtn = document.getElementById('fab-revocables');
+            const fabMyVoteBtn = document.getElementById('fab-my-vote');
 
             // Elementos de control facial
             const facialRecognitionBtn = document.getElementById('facial-recognition-btn');
@@ -258,7 +336,6 @@
             const cameraContainer = document.getElementById('camera-container');
             const cameraFeed = document.getElementById('camera-feed');
             let videoStream = null;
-
 
             // --- BASE DE DATOS SIMULADA ---
             const authoritiesData = {
@@ -301,96 +378,145 @@
             };
             
             // --- FUNCIONES ---
-            function generateFakeHash() {
-                return '0x' + [...Array(64)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+            function showView(viewToShow, title) {
+                appContainer.classList.remove('hidden');
+                welcomeView.classList.add('hidden');
+                allViews.forEach(view => view.classList.add('hidden'));
+                viewToShow.classList.remove('hidden');
+                fabContainer.classList.remove('hidden');
+                headerTitle.textContent = title;
+                fabMenu.classList.add('hidden');
+                fabIconMenu.classList.remove('hidden');
+                fabIconClose.classList.add('hidden');
             }
 
+            function generateFakeHash() { return '0x' + [...Array(64)].map(() => Math.floor(Math.random() * 16).toString(16)).join(''); }
+
             async function startFacialScan() {
-                if (videoStream) {
-                    videoStream.getTracks().forEach(track => track.stop());
-                    videoStream = null;
-                }
-                
+                if (videoStream) { videoStream.getTracks().forEach(track => track.stop()); videoStream = null; }
                 try {
                     videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
                     cameraContainer.classList.remove('hidden');
                     cameraFeed.srcObject = videoStream;
                     facialRecognitionText.textContent = "Escaneando...";
                     facialRecognitionBtn.disabled = true;
-
                     setTimeout(() => {
-                        // Simulación de validación
                         videoStream.getTracks().forEach(track => track.stop());
                         cameraContainer.classList.add('hidden');
                         facialRecognitionText.textContent = "Rostro Validado";
                         facialRecognitionCheck.classList.remove('hidden');
-                        loginBtn.disabled = false; // Habilitar botón de login
+                        loginBtn.disabled = false;
                         facialRecognitionBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
                         facialRecognitionBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
                     }, 3000);
-
                 } catch (err) {
                     console.error("Error al acceder a la cámara: ", err);
                     facialRecognitionText.textContent = "Acceso a cámara denegado";
                     facialRecognitionBtn.classList.add('bg-red-500');
                 }
             }
-
-
+            
             function renderAuthorities(level) {
                 authoritiesListContainer.innerHTML = '';
                 authoritiesTitle.textContent = `Autoridades de Nivel ${level.charAt(0).toUpperCase() + level.slice(1)}`;
-                
                 const authorities = authoritiesData[level];
-                
-                authorities.forEach(auth => {
-                    const precisePercentage = (auth.currentVotes / auth.requiredVotes) * 100;
-                    const displayPercentage = precisePercentage.toFixed(2);
+                authorities.forEach(auth => { authoritiesListContainer.appendChild(createAuthorityCard(auth, level)); });
+            }
+
+            function renderRevocables() {
+                revocablesListContainer.innerHTML = '';
+                const levels = ['distrital', 'provincial', 'regional'];
+                let hasRevocables = false;
+
+                levels.forEach(level => {
+                    const revocableAuths = authoritiesData[level].filter(auth => (auth.currentVotes / auth.requiredVotes) * 100 >= 25);
                     
-                    let progressBarColor = 'bg-red-500';
-                    let cardExtraClasses = '';
-                    let tagHtml = '';
-
-                    if (precisePercentage >= 25) {
-                        progressBarColor = 'bg-green-500';
-                        cardExtraClasses = 'relative bg-green-50 dark:bg-green-900/30 ring-2 ring-green-500';
-                        tagHtml = `<div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">Firmas Logradas</div>`;
-                    } else if (precisePercentage >= 14) {
-                        progressBarColor = 'bg-orange-500';
+                    if (revocableAuths.length > 0) {
+                        hasRevocables = true;
+                        const levelTitle = document.createElement('h2');
+                        levelTitle.className = "text-2xl font-bold text-indigo-500 dark:text-indigo-400 border-b-2 border-indigo-200 dark:border-indigo-700 pb-2 mb-4";
+                        levelTitle.textContent = `Nivel ${level.charAt(0).toUpperCase() + level.slice(1)}`;
+                        revocablesListContainer.appendChild(levelTitle);
+                        
+                        const list = document.createElement('div');
+                        list.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8";
+                        revocableAuths.forEach(auth => { list.appendChild(createAuthorityCard(auth, level)); });
+                        revocablesListContainer.appendChild(list);
                     }
-
-                    const card = document.createElement('div');
-                    card.className = `authority-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2 ${cardExtraClasses}`;
-                    card.innerHTML = `
-                        ${tagHtml}
-                        <img class="w-24 h-24 rounded-full object-cover mb-4 border-4 border-indigo-200 dark:border-indigo-700" src="https://placehold.co/100x100/E2E8F0/4A5568?text=${auth.imgInitial}" alt="Foto de ${auth.name}">
-                        <h3 class="text-lg font-bold">${auth.name}</h3>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">${auth.position}</p>
-                        <div class="w-full my-4">
-                            <div class="flex justify-between items-center text-sm mb-1">
-                                <span>Votos para revocar</span>
-                                <span class="font-semibold" id="votes-${auth.id}">${auth.currentVotes.toLocaleString()} / ${auth.requiredVotes.toLocaleString()}</span>
-                            </div>
-                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                <div id="progress-${auth.id}" class="${progressBarColor} h-2.5 rounded-full transition-all duration-500" style="width: ${precisePercentage}%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1" id="percentage-text-${auth.id}">${displayPercentage}% del umbral alcanzado</p>
-                        </div>
-                        <button data-id="${auth.id}" data-level="${level}" class="vote-btn mt-auto w-full font-bold py-2 px-4 rounded-lg btn-3d ${auth.isVoted ? 'bg-gray-500 hover:bg-gray-400 btn-gray' : 'bg-red-600 hover:bg-red-500 btn-red'}">
-                            ${auth.isVoted ? 'Quitar Voto' : 'Votar para Revocar'}
-                        </button>
-                    `;
-                    authoritiesListContainer.appendChild(card);
                 });
+
+                if (!hasRevocables) {
+                    revocablesListContainer.innerHTML = `<div class="text-center py-16 bg-white dark:bg-gray-800 rounded-lg shadow-md"><p class="text-xl text-gray-500">Aún no hay autoridades que hayan alcanzado el umbral de revocación.</p></div>`;
+                }
+            }
+            
+            function renderMyVotes() {
+                myVoteListContainer.innerHTML = '';
+                const levels = ['distrital', 'provincial', 'regional'];
+                let hasVoted = false;
+
+                levels.forEach(level => {
+                    const myVotedAuths = authoritiesData[level].filter(auth => auth.isVoted);
+                    
+                    if (myVotedAuths.length > 0) {
+                        hasVoted = true;
+                        const levelTitle = document.createElement('h2');
+                        levelTitle.className = "text-2xl font-bold text-indigo-500 dark:text-indigo-400 border-b-2 border-indigo-200 dark:border-indigo-700 pb-2 mb-4";
+                        levelTitle.textContent = `Nivel ${level.charAt(0).toUpperCase() + level.slice(1)}`;
+                        myVoteListContainer.appendChild(levelTitle);
+                        
+                        const list = document.createElement('div');
+                        list.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8";
+                        myVotedAuths.forEach(auth => { list.appendChild(createAuthorityCard(auth, level)); });
+                        myVoteListContainer.appendChild(list);
+                    }
+                });
+
+                if (!hasVoted) {
+                    myVoteListContainer.innerHTML = `<div class="text-center py-16 bg-white dark:bg-gray-800 rounded-lg shadow-md"><p class="text-xl text-gray-500">Aún no has registrado ningún voto.</p></div>`;
+                }
+            }
+
+            function createAuthorityCard(auth, level) {
+                const precisePercentage = (auth.currentVotes / auth.requiredVotes) * 100;
+                const displayPercentage = precisePercentage.toFixed(2);
+                let progressBarColor = 'bg-red-500';
+                let cardExtraClasses = '';
+                let tagHtml = '';
+                if (precisePercentage >= 25) {
+                    progressBarColor = 'bg-green-500';
+                    cardExtraClasses = 'relative bg-green-50 dark:bg-green-900/30 ring-2 ring-green-500';
+                    tagHtml = `<div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">Firmas Logradas</div>`;
+                } else if (precisePercentage >= 14) { progressBarColor = 'bg-orange-500'; }
+                const card = document.createElement('div');
+                card.className = `authority-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2 ${cardExtraClasses}`;
+                card.innerHTML = `
+                    ${tagHtml}
+                    <img class="w-24 h-24 rounded-full object-cover mb-4 border-4 border-indigo-200 dark:border-indigo-700" src="https://placehold.co/100x100/E2E8F0/4A5568?text=${auth.imgInitial}" alt="Foto de ${auth.name}">
+                    <h3 class="text-lg font-bold">${auth.name}</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">${auth.position}</p>
+                    <div class="w-full my-4">
+                        <div class="flex justify-between items-center text-sm mb-1">
+                            <span>Votos para revocar</span>
+                            <span class="font-semibold" id="votes-${auth.id}">${auth.currentVotes.toLocaleString()} / ${auth.requiredVotes.toLocaleString()}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                            <div id="progress-${auth.id}" class="${progressBarColor} h-2.5 rounded-full transition-all duration-500" style="width: ${precisePercentage}%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1" id="percentage-text-${auth.id}">${displayPercentage}% del umbral alcanzado</p>
+                    </div>
+                    <button data-id="${auth.id}" data-level="${level}" class="vote-btn mt-auto w-full font-bold py-2 px-4 rounded-lg btn-3d ${auth.isVoted ? 'bg-gray-500 hover:bg-gray-400 btn-gray' : 'bg-red-600 hover:bg-red-500 btn-red'}">
+                        ${auth.isVoted ? 'Quitar Voto' : 'Votar para Revocar'}
+                    </button>
+                `;
+                return card;
             }
             
             function handleVote(e) {
                 if (!e.target.classList.contains('vote-btn')) return;
-
                 const button = e.target;
                 const { id, level } = button.dataset;
                 const authority = authoritiesData[level].find(auth => auth.id === id);
-
                 if (authority.isVoted) {
                     authority.currentVotes--;
                     authority.isVoted = false;
@@ -403,101 +529,61 @@
                     modalContentVote.classList.remove('hidden');
                     modalContentUnvote.classList.add('hidden');
                 }
-                
-                updateCardUI(authority, button);
                 confirmationModal.classList.remove('hidden');
-            }
-
-            function updateCardUI(authority, button) {
-                const precisePercentage = (authority.currentVotes / authority.requiredVotes) * 100;
-                const displayPercentage = precisePercentage.toFixed(2);
-                
-                document.getElementById(`votes-${authority.id}`).textContent = `${authority.currentVotes.toLocaleString()} / ${authority.requiredVotes.toLocaleString()}`;
-                document.getElementById(`percentage-text-${authority.id}`).textContent = `${displayPercentage}% del umbral alcanzado`;
-                
-                const progressBar = document.getElementById(`progress-${authority.id}`);
-                progressBar.style.width = `${precisePercentage}%`;
-                progressBar.classList.remove('bg-red-500', 'bg-orange-500', 'bg-green-500');
-
-                const card = button.closest('.authority-card');
-                card.className = "authority-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2";
-                
-                const existingTag = card.querySelector('.absolute');
-                if (existingTag) existingTag.remove();
-
-                if (precisePercentage >= 25) {
-                    progressBar.classList.add('bg-green-500');
-                    card.classList.add('relative', 'bg-green-50', 'dark:bg-green-900/30', 'ring-2', 'ring-green-500');
-                    const tagHtml = `<div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">Firmas Logradas</div>`;
-                    card.insertAdjacentHTML('afterbegin', tagHtml);
-                } else if (precisePercentage >= 14) {
-                    progressBar.classList.add('bg-orange-500');
-                } else {
-                    progressBar.classList.add('bg-red-500');
-                }
-                
-                button.textContent = authority.isVoted ? 'Quitar Voto' : 'Votar para Revocar';
-                button.classList.toggle('bg-red-600', !authority.isVoted);
-                button.classList.toggle('hover:bg-red-500', !authority.isVoted);
-                button.classList.toggle('btn-red', !authority.isVoted);
-                button.classList.toggle('bg-gray-500', authority.isVoted);
-                button.classList.toggle('hover:bg-gray-400', authority.isVoted);
-                button.classList.toggle('btn-gray', authority.isVoted);
+                // Re-render all lists to reflect the change
+                renderAuthorities(document.querySelector('.filter-btn.active').id.split('-')[1]);
+                renderRevocables();
+                renderMyVotes();
             }
 
             // --- EVENT LISTENERS ---
-            if (localStorage.getItem('theme') === 'light') {
-                htmlEl.classList.remove('dark');
-                themeToggle.checked = false;
-            } else {
-                htmlEl.classList.add('dark');
-                themeToggle.checked = true;
-            }
-
-            themeToggle.addEventListener('change', () => {
-                htmlEl.classList.toggle('dark');
-                localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
-            });
-
+            if (localStorage.getItem('theme') === 'light') { htmlEl.classList.remove('dark'); themeToggle.checked = false; } 
+            else { htmlEl.classList.add('dark'); themeToggle.checked = true; }
+            themeToggle.addEventListener('change', () => { htmlEl.classList.toggle('dark'); localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light'); });
             facialRecognitionBtn.addEventListener('click', startFacialScan);
-
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                loginView.classList.add('hidden');
-                dashboardView.classList.remove('hidden');
-            });
-
+            loginForm.addEventListener('submit', (e) => { e.preventDefault(); loginView.classList.add('hidden'); welcomeView.classList.remove('hidden'); });
             logoutBtn.addEventListener('click', () => {
-                dashboardView.classList.add('hidden');
+                appContainer.classList.add('hidden');
+                fabContainer.classList.add('hidden');
                 loginView.classList.remove('hidden');
-                // Reset login form for next time
                 loginBtn.disabled = true;
                 facialRecognitionBtn.disabled = false;
                 facialRecognitionBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
                 facialRecognitionBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
                 facialRecognitionText.textContent = "Activar Cámara";
                 facialRecognitionCheck.classList.add('hidden');
-
             });
-
             closeModalBtn.addEventListener('click', () => confirmationModal.classList.add('hidden'));
-            confirmationModal.addEventListener('click', (e) => {
-                if (e.target === confirmationModal) confirmationModal.classList.add('hidden');
-            });
-
+            confirmationModal.addEventListener('click', (e) => { if (e.target === confirmationModal) confirmationModal.classList.add('hidden'); });
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     filterButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-                    const level = button.id.split('-')[1];
-                    renderAuthorities(level);
+                    renderAuthorities(button.id.split('-')[1]);
                 });
             });
+            
+            // --- Navigation Listeners ---
+            welcomeVoteBtn.addEventListener('click', () => showView(dashboardView, 'Portal de Revocatoria'));
+            welcomeRevocablesBtn.addEventListener('click', () => showView(revocablesView, 'Candidatos Revocables'));
+            welcomeMyVoteBtn.addEventListener('click', () => showView(myVoteView, 'Mis Votos Emitidos'));
+            fabVoteBtn.addEventListener('click', () => showView(dashboardView, 'Portal de Revocatoria'));
+            fabRevocablesBtn.addEventListener('click', () => showView(revocablesView, 'Candidatos Revocables'));
+            fabMyVoteBtn.addEventListener('click', () => showView(myVoteView, 'Mis Votos Emitidos'));
 
-            authoritiesListContainer.addEventListener('click', handleVote);
+            fabMainBtn.addEventListener('click', () => {
+                fabMenu.classList.toggle('hidden');
+                fabIconMenu.classList.toggle('hidden');
+                fabIconClose.classList.toggle('hidden');
+            });
+
+            // Listen for votes anywhere in the app
+            appContainer.addEventListener('click', handleVote);
 
             // --- INICIALIZACIÓN ---
             renderAuthorities('distrital');
+            renderRevocables();
+            renderMyVotes();
         });
     </script>
 
